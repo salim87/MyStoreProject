@@ -3,6 +3,7 @@ package com.mystore.base;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Properties;
 
 import org.openqa.selenium.WebDriver;
@@ -13,11 +14,12 @@ import org.testng.annotations.BeforeTest;
 
 public class BaseClass {
 	public static WebDriver driver;
+	
+   public static Properties prop = null;
 	@BeforeTest
 	public void loadConfig() {
-		
 		FileInputStream fis = null;
-	      Properties prop = null;
+		
 	      try {
 	         fis = new FileInputStream(System.getProperty("user.dir")+"/Configuration/Config.properties");
 	         prop = new Properties();
@@ -39,7 +41,12 @@ public class BaseClass {
 			}else if(browserName.equalsIgnoreCase("edge")) {
 				driver = new EdgeDriver();
 			}
+			driver.manage().window().maximize();
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+			driver.get(prop.getProperty("url"));
 		}
+		
+		
 	}
 
 
