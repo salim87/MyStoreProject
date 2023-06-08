@@ -9,19 +9,45 @@ import com.mystore.actiondriver.Action;
 import com.mystore.base.BaseClass;
 
 public class IndexPage extends BaseClass{
-	WebDriver driver;
 
-	public IndexPage(WebDriver driver) {
-		super();
-		this.driver = driver;
-		PageFactory.initElements(driver, this);
+	Action action = new Action();
+	
+	public IndexPage() {
+		PageFactory.initElements(getDriver(), this);
 	}
 	
-	@FindBy(xpath="//a[normalize-space()='Sign in']")
-	WebElement signInBtn;
+	@FindBy(xpath = "//a[@class='login']") 
+	private WebElement signInBtn;
+	
+	@FindBy(xpath = "//img[@class='logo img-responsive']")
+	private WebElement myStoreLogo;
+	
+	@FindBy(id="search_query_top")
+	private WebElement searchProductBox;
+	
+	@FindBy(name="submit_search")
+	private WebElement searchButton;
 
-	public LoginPage clickOnSignIn() {
-	//	Action.click(driver, signInBtn);
-		return new LoginPage(driver);
+	public LoginPage clickOnSignIn() throws Throwable{
+		action.fluentWait(getDriver(), signInBtn, 10);
+		action.click(getDriver(), signInBtn);
+		return new LoginPage();
+	}
+	
+	public boolean validateLogo() throws Throwable {
+		return action.isDisplayed(getDriver(), myStoreLogo);
+	}
+	
+	public String getMyStoreTitle() {
+		String myStoreTitel=getDriver().getTitle();
+		return myStoreTitel;
+	}
+	
+	public SearchResultPage searchProduct(String productName) throws Throwable {
+		action.type(searchProductBox, productName);
+		action.scrollByVisibilityOfElement(getDriver(), searchButton);
+		action.click(getDriver(), searchButton);
+		Thread.sleep(3000);
+		return new SearchResultPage();
 	}
 }

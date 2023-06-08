@@ -1,13 +1,16 @@
 package com.mystore.pageobjects;
 
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+
+import com.mystore.actiondriver.Action;
 
 public class LoginPage {
-	WebDriver driver;
+	Action action= new Action();
 
-	public LoginPage(WebDriver driver) {
-		super();
-		this.driver = driver;
+	public LoginPage() {
+		
 	}
+	
 	
 }
