@@ -10,18 +10,25 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeTest;
 
 public class BaseClass {
-	public static WebDriver driver;
 	
    public static Properties prop = null;
-	@BeforeTest
+  // ExtentManager.setExtent();
+   
+   // Declare ThreadLocal Driver
+	public static ThreadLocal<RemoteWebDriver> driver = new ThreadLocal<>();
+	//loadConfig method is to load the configuration
+  
+	@BeforeTest(groups = { "Smoke", "Sanity", "Regression" })
 	public void loadConfig() {
 		FileInputStream fis = null;
 		
 	      try {
-	         fis = new FileInputStream(System.getProperty("user.dir")+"/Configuration/Config.properties");
+	         fis = new FileInputStream(System.getProperty("user.dir")+"/Configuration/config.properties");
 	         prop = new Properties();
 	         prop.load(fis);
 	      } catch(FileNotFoundException fnfe) {
@@ -32,20 +39,30 @@ public class BaseClass {
 	      
 	   }
 	
-		public static void lauchApp() {
-			String browserName= System.getProperty("browser");
+	public static WebDriver getDriver() {
+		// Get Driver from threadLocalmap
+		return driver.get();
+	}
+	
+		public static void lauchApp(String browserName) {
+			//String browserName= System.getProperty("browser");
 			if(browserName.equalsIgnoreCase("chrome")) {
-				driver = new ChromeDriver();
+				driver.set(new ChromeDriver());
 			}else if(browserName.equalsIgnoreCase("firefox")) {
-				driver = new FirefoxDriver();
+				driver.set( new FirefoxDriver());
 			}else if(browserName.equalsIgnoreCase("edge")) {
-				driver = new EdgeDriver();
+				driver.set(new EdgeDriver());
 			}
-			driver.manage().window().maximize();
-			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
-			driver.get(prop.getProperty("url"));
+			getDriver().manage().window().maximize();
+			getDriver().manage().deleteAllCookies();
+			getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+			getDriver().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+			getDriver().get(prop.getProperty("url"));
 		}
-		
+		@AfterSuite(groups = { "Smoke", "Regression","Sanity" })
+		public void afterSuite() {
+		//	ExtentManager.endReport();
+		}
 		
 	}
 

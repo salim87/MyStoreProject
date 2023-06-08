@@ -21,7 +21,7 @@ public class IndexPage extends BaseClass{
 	WebElement signInBtn;
 
 	public LoginPage clickOnSignIn() {
-		Action.click(driver, signInBtn);
+	//	Action.click(driver, signInBtn);
 		return new LoginPage(driver);
 	}
 }
