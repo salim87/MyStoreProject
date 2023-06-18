@@ -9,7 +9,7 @@ import com.mystore.base.BaseClass;
 
 public class AddressPage extends BaseClass {
 	
-	Action action= new Action();
+Action action= new Action();
 	
 	@FindBy(xpath="//span[text()='Proceed to checkout']")
 	private WebElement proceedToCheckOut;
